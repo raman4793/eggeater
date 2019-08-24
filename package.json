@@ -1,0 +1,19 @@
+{
+  "name": "eggeater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/raman4793/eggeater.git"
+  },
+  "author": "Ramachandran R",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raman4793/eggeater/issues"
+  },
+  "homepage": "https://github.com/raman4793/eggeater#readme"
+}
