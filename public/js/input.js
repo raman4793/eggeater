@@ -17,19 +17,10 @@ export function setupKeyboard(mainChar) {
         }
     });
     input.addMapping(RIGHT_ARROW, keyState => {
-        // console.log(keyState);
-        if (keyState) {
-            mainChar.velocity.x = X_VELOCITY;
-        } else {
-            mainChar.velocity.x = 0;
-        }
+        mainChar.movement.direction = keyState;
     });
     input.addMapping(LEFT_ARROW, keyState => {
-        if (keyState) {
-            mainChar.velocity.x = -X_VELOCITY;
-        } else {
-            mainChar.velocity.x = 0;
-        }
+        mainChar.movement.direction = -keyState;
     });
     input.addMapping(CTRL, keyState => {
         console.log("EAT!!!");

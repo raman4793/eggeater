@@ -6,6 +6,7 @@ export default class Level {
 
     constructor() {
         this.gravity = 2000;
+        this.totalTime = 0;
         this.compositor = new Compositor();
         this.entities = new Set();
         this.tiles = new Matrix();
@@ -25,6 +26,7 @@ export default class Level {
 
             entity.velocity.y += this.gravity * deltaTime;
         });
+        this.totalTime += deltaTime;
     }
 
 }

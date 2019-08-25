@@ -102,6 +102,16 @@
       "type": "ground",
       "ranges": [
         [
+          5,
+          9
+        ]
+      ]
+    },
+    {
+      "tile": "chance",
+      "type": "ground",
+      "ranges": [
+        [
           23,
           9
         ],
