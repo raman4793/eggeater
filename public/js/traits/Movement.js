@@ -15,7 +15,13 @@ export default class Movement extends Trait {
         const absoluteVelocityX = Math.abs(entity.velocity.x);
         if (this.direction !== 0) {
             entity.velocity.x += this.acceleration * deltaTime * this.direction;
-            this.heading = this.direction;
+            if (entity.jump) {
+                if (!entity.jump.falling) {
+                    this.heading = this.direction;
+                }
+            } else {
+                this.heading = this.direction;
+            }
         } else if (entity.velocity.x !== 0) {
             const decceleration = Math.min(absoluteVelocityX, this.decceleration * deltaTime);
             entity.velocity.x += entity.velocity.x > 0 ? -decceleration : decceleration;
