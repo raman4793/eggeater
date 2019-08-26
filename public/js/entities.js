@@ -14,7 +14,10 @@ export function createMainChar() {
             const mainCharAnimation = createAnimation(['run-1', 'run-2', 'run-3'], 10);
 
             function routeFrame(mainChar) {
-                if (mainChar.velocity.x !== 0) {
+                if (mainChar.movement.distance > 0) {
+                    if ((mainChar.velocity.x > 0 && mainChar.movement.direction < 0) || (mainChar.velocity.x < 0 && mainChar.movement.direction > 0)) {
+                        return 'break';
+                    }
                     return mainCharAnimation(mainChar.movement.distance);
                 }
                 return 'idle';

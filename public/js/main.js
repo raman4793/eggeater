@@ -36,6 +36,9 @@ Promise.all([
 
     timer.update = function update(deltaTime) {
         level.update(deltaTime);
+        if (mainChar.position.x > 100) {
+            camera.position.x = mainChar.position.x - 100;
+        }
         level.compositor.draw(context, camera);
     };
     timer.start();

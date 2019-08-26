@@ -5,6 +5,10 @@ export class Trait {
         this.NAME = name;
     }
 
+    obstruct(deltaTime) {
+
+    }
+
     update(deltaTime) {
         console.warn("Unhandled update in Trait");
     }
@@ -26,6 +30,12 @@ export default class Entity {
     update(deltaTime) {
         this.traits.forEach(trait => {
             trait.update(this, deltaTime);
+        });
+    }
+
+    obstruct(side) {
+        this.traits.forEach(trait => {
+            trait.obstruct(this, side);
         });
     }
 }
