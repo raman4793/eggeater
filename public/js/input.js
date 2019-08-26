@@ -17,10 +17,10 @@ export function setupKeyboard(mainChar) {
         }
     });
     input.addMapping(RIGHT_ARROW, keyState => {
-        mainChar.movement.direction = keyState;
+        mainChar.movement.direction += keyState ? 1 : -1;
     });
     input.addMapping(LEFT_ARROW, keyState => {
-        mainChar.movement.direction = -keyState;
+        mainChar.movement.direction += keyState ? -1 : 1;
     });
     input.addMapping(CTRL, keyState => {
         console.log("EAT!!!");
