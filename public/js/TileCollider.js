@@ -55,12 +55,13 @@ export default class TileCollider {
                 if (entity.position.y + entity.size.y > match.y1) {
                     entity.position.y = match.y1 - entity.size.y;
                     entity.velocity.y = 0;
-                    entity.obstruct('bottom')
+                    entity.obstruct('bottom');
                 }
             } else if (entity.velocity.y < 0) {
                 if (entity.position.y < match.y2) {
                     entity.position.y = match.y2;
                     entity.velocity.y = 0;
+                    entity.obstruct('top');
                 }
             }
         });
