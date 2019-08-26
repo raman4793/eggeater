@@ -1,5 +1,10 @@
 import {Vector} from './math.js'
 
+export const SIDES = {
+    TOP: Symbol("top"),
+    BOTTOM: Symbol("bottom")
+};
+
 export class Trait {
     constructor(name) {
         this.NAME = name;

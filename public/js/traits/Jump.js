@@ -1,22 +1,26 @@
-import {Trait} from '../Entity.js';
+import {SIDES, Trait} from '../Entity.js';
 
 export default class Jump extends Trait {
     constructor() {
         super('jump');
-        this.ready = false;
+        this.ready = 0;
         this.duration = 0.5;
         this.engageTime = 0;
         this.velocity = 200;
     }
 
-    start() {
-        if (this.ready) {
-            this.engageTime = this.duration;
-        }
+    get falling() {
+        return this.ready < 0;
     }
 
     cancel() {
         this.engageTime = 0;
+    }
+
+    start() {
+        if (this.ready > 0) {
+            this.engageTime = this.duration;
+        }
     }
 
     update(entity, deltaTime) {
@@ -24,13 +28,13 @@ export default class Jump extends Trait {
             entity.velocity.y = -this.velocity;
             this.engageTime -= deltaTime;
         }
-        this.ready = false;
+        this.ready--;
     }
 
     obstruct(entity, side) {
-        if (side === "bottom") {
-            this.ready = true;
-        } else if (side === "top") {
+        if (side === SIDES.BOTTOM) {
+            this.ready = 1;
+        } else if (side === SIDES.TOP) {
             this.cancel();
         }
     }

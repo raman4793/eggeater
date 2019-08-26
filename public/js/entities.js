@@ -14,7 +14,7 @@ export function createMainChar() {
             const mainCharAnimation = createAnimation(['run-1', 'run-2', 'run-3'], 10);
 
             function routeFrame(mainChar) {
-                if (!mainChar.jump.ready) {
+                if (mainChar.jump.falling) {
                     return 'jump';
                 }
                 if (mainChar.movement.distance > 0) {
