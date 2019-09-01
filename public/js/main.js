@@ -1,5 +1,5 @@
 import Camera from "./Camera.js";
-import {loadLevel} from './loaders.js'
+import {loadLevel} from "./loaders/level.js"
 import {createMainChar} from './entities.js'
 import {createCameraLayer, createCollisionLayer} from './layers.js'
 import Timer from './Timer.js'
@@ -20,7 +20,7 @@ Promise.all([
 ]).then(([mainChar, level]) => {
     const camera = new Camera();
     level.entities.add(mainChar);
-    window.camera = camera;
+    window.level = level;
     mainChar.position.set(0, HEIGHT - (16 * 5));
     mainChar.velocity.set(0, 0);
 

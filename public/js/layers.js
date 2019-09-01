@@ -11,7 +11,7 @@ export function createBackgroundLayer(level, sprites) {
     function redraw(drawFrom, drawTo) {
         startIndex = drawFrom;
         endIndex = drawTo;
-
+        window.tiles = tiles;
         for (let x = startIndex; x <= endIndex; ++x) {
             const col = tiles.grid[x];
             if (col) {
