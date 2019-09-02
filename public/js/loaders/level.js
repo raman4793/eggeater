@@ -1,44 +1,66 @@
 import Level from "../Level.js";
 import {createBackgroundLayer, createSpriteLayer} from "../layers.js";
 import {loadJson, loadSpriteSheet} from "../loaders.js";
+import {Matrix} from '../math.js'
 
-export function createTiles(level, tiles, patterns, offsetX = 0, offsetY = 0) {
-    function applyRange(tile, xStart, xLength, yStart, yLength) {
-        const xEnd = xStart + xLength;
-        const yEnd = yStart + yLength;
-        for (let x = xStart; x < xEnd; ++x) {
-            for (let y = yStart; y < yEnd; ++y) {
+export function* expandSpan(xStart, xLength, yStart, yLength) {
+    const xEnd = xStart + xLength;
+    const yEnd = yStart + yLength;
+    for (let x = xStart; x < xEnd; ++x) {
+        for (let y = yStart; y < yEnd; ++y) {
+            yield {x, y}
+        }
+    }
+}
+
+function expandRange(range) {
+    if (range.length === 4) {
+        const [xStart, xLength, yStart, yLength] = range;
+        return expandSpan(xStart, xLength, yStart, yLength);
+    } else if (range.length === 3) {
+        const [xStart, xLength, yStart] = range;
+        const yLength = 1;
+        return expandSpan(xStart, xLength, yStart, yLength);
+    } else if (range.length === 2) {
+        const [xStart, yStart] = range;
+        const xLength = 1;
+        const yLength = 1;
+        return expandSpan(xStart, xLength, yStart, yLength);
+    }
+}
+
+function* expandRanges(ranges) {
+    for (const range of ranges) {
+        for (const item of expandRange(range)) {
+            yield item;
+        }
+    }
+}
+
+export function expandTiles(tiles, patterns) {
+    const expandedTiles = [];
+
+    function walkTiles(tiles, offsetX, offsetY) {
+        for (const tile of tiles) {
+            for (const {x, y} of expandRanges(tile.ranges)) {
                 const derivedX = x + offsetX;
                 const derivedY = y + offsetY;
                 if (tile.pattern) {
-                    console.log("creating pattern");
                     const tiles = patterns[tile.pattern].tiles;
-                    console.log(patterns[tile.pattern]);
-                    createTiles(level, tiles, patterns, derivedX, derivedY);
+                    walkTiles(tiles, derivedX, derivedY);
                 } else {
-                    level.tiles.set(derivedX, derivedY, {name: tile.name, type: tile.type})
+                    expandedTiles.push({
+                        tile,
+                        x: derivedX,
+                        y: derivedY
+                    });
                 }
             }
         }
     }
 
-    tiles.forEach(tile => {
-        tile.ranges.forEach(range => {
-            if (range.length === 4) {
-                const [xStart, xLength, yStart, yLength] = range;
-                applyRange(tile, xStart, xLength, yStart, yLength);
-            } else if (range.length === 3) {
-                const [xStart, xLength, yStart] = range;
-                const yLength = 1;
-                applyRange(tile, xStart, xLength, yStart, yLength);
-            } else if (range.length === 2) {
-                const [xStart, yStart] = range;
-                const xLength = 1;
-                const yLength = 1;
-                applyRange(tile, xStart, xLength, yStart, yLength);
-            }
-        });
-    });
+    walkTiles(tiles, 0, 0);
+    return expandedTiles;
 }
 
 export function loadLevel(name) {
@@ -48,12 +70,35 @@ export function loadLevel(name) {
             loadSpriteSheet(leveSpec.spriteSheet)
         ])).then(([levelSpec, backgroundSprites]) => {
             const level = new Level();
-            createTiles(level, levelSpec.tiles, levelSpec.patterns);
-            const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
-            level.compositor.layers.push(backgroundLayer);
+            const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
+                return mergedTiles.concat(layerSpec.tiles)
+            }, []);
+            const collisionGrid = createCollisionGrid(mergedTiles, levelSpec.patterns);
+            level.setCollisionGrid(collisionGrid);
+            levelSpec.layers.forEach(layer => {
+                const backgroundGrid = createBackgroundGrid(layer.tiles, levelSpec.patterns);
+                const backgroundLayer = createBackgroundLayer(level, backgroundGrid, backgroundSprites);
+                level.compositor.layers.push(backgroundLayer);
+            });
 
             const spriteLayer = createSpriteLayer(level.entities);
             level.compositor.layers.push(spriteLayer);
             return level;
         });
+}
+
+function createCollisionGrid(tiles, patterns) {
+    const grid = new Matrix();
+    for (const {tile, x, y} of expandTiles(tiles, patterns)) {
+        grid.set(x, y, {type: tile.type})
+    }
+    return grid;
+}
+
+function createBackgroundGrid(tiles, patterns) {
+    const grid = new Matrix();
+    for (const {tile, x, y} of expandTiles(tiles, patterns)) {
+        grid.set(x, y, {name: tile.name})
+    }
+    return grid;
 }
