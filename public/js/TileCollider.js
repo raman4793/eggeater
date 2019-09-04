@@ -9,28 +9,35 @@ export default class TileCollider {
     checkX(entity) {
         let x;
         if (entity.velocity.x > 0) {
-            x = entity.position.x + entity.size.x;
+            x = entity.bounds.right;
         } else if (entity.velocity.x < 0) {
-            x = entity.position.x;
+            x = entity.bounds.left;
         } else {
             return;
         }
+
         const matches = this.tiles.searchByRange(
             x, x,
-            entity.position.y, entity.position.y + entity.size.y);
+            entity.bounds.top, entity.bounds.bottom);
+
         matches.forEach(match => {
-            if (match.tile.type !== "ground") {
+            if (match.tile.type !== 'ground') {
                 return;
             }
+
             if (entity.velocity.x > 0) {
-                if (entity.position.x + entity.size.x > match.x1) {
-                    entity.position.x = match.x1 - entity.size.x;
+                if (entity.bounds.right > match.x1) {
+                    entity.bounds.right = match.x1;
                     entity.velocity.x = 0;
+
+                    entity.obstruct(SIDES.RIGHT);
                 }
             } else if (entity.velocity.x < 0) {
-                if (entity.position.x < match.x2) {
-                    entity.position.x = match.x2;
+                if (entity.bounds.left < match.x2) {
+                    entity.bounds.left = match.x2;
                     entity.velocity.x = 0;
+
+                    entity.obstruct(SIDES.LEFT);
                 }
             }
         });
@@ -39,37 +46,37 @@ export default class TileCollider {
     checkY(entity) {
         let y;
         if (entity.velocity.y > 0) {
-            y = entity.position.y + entity.size.y;
+            y = entity.bounds.bottom;
         } else if (entity.velocity.y < 0) {
-            y = entity.position.y;
+            y = entity.bounds.top;
         } else {
             return;
         }
+
         const matches = this.tiles.searchByRange(
-            entity.position.x, entity.position.x + entity.size.x,
+            entity.bounds.left, entity.bounds.right,
             y, y);
+
         matches.forEach(match => {
-            if (match.tile.type !== "ground") {
+            if (match.tile.type !== 'ground') {
                 return;
             }
+
             if (entity.velocity.y > 0) {
-                if (entity.position.y + entity.size.y > match.y1) {
-                    entity.position.y = match.y1 - entity.size.y;
+                if (entity.bounds.bottom > match.y1) {
+                    entity.bounds.bottom = match.y1;
                     entity.velocity.y = 0;
+
                     entity.obstruct(SIDES.BOTTOM);
                 }
             } else if (entity.velocity.y < 0) {
-                if (entity.position.y < match.y2) {
-                    entity.position.y = match.y2;
+                if (entity.bounds.top < match.y2) {
+                    entity.bounds.top = match.y2;
                     entity.velocity.y = 0;
+
                     entity.obstruct(SIDES.TOP);
                 }
             }
         });
-    }
-
-    test(entity) {
-        this.checkX(entity);
-        this.checkY(entity);
     }
 }

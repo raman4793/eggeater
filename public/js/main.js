@@ -1,10 +1,10 @@
 import Camera from "./Camera.js";
 import {loadLevel} from "./loaders/level.js"
-import {createMainChar} from './entities.js'
 import {createCameraLayer, createCollisionLayer} from './layers.js'
 import Timer from './Timer.js'
 import {setupKeyboard} from "./input.js";
 import {setupMouseControl} from "./debug.js";
+import {loadEntities} from "./entities.js";
 
 const WIDTH = 740;
 const HEIGHT = 400;
@@ -15,14 +15,20 @@ const context = canvas.getContext("2d");
 
 
 Promise.all([
-    createMainChar(),
+    loadEntities(),
     loadLevel('1-1')
-]).then(([mainChar, level]) => {
+]).then(([entityFactory, level]) => {
     const camera = new Camera();
+    const mainChar = createMainChar();
     level.entities.add(mainChar);
     window.level = level;
     mainChar.position.set(0, HEIGHT - (16 * 5));
     mainChar.velocity.set(0, 0);
+
+    const goomba = createGoomba();
+    goomba.size.set(16, 16);
+    goomba.position.set(220, 0);
+    level.entities.add(goomba);
 
     const input = setupKeyboard(mainChar);
     input.listenTo(window);
