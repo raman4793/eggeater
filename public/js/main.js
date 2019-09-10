@@ -19,13 +19,13 @@ Promise.all([
     loadLevel('1-1')
 ]).then(([entityFactory, level]) => {
     const camera = new Camera();
-    const mainChar = createMainChar();
+    const mainChar = entityFactory.mainChar();
     level.entities.add(mainChar);
     window.level = level;
     mainChar.position.set(0, HEIGHT - (16 * 5));
     mainChar.velocity.set(0, 0);
 
-    const goomba = createGoomba();
+    const goomba = entityFactory.goomba();
     goomba.size.set(16, 16);
     goomba.position.set(220, 0);
     level.entities.add(goomba);
