@@ -36,6 +36,35 @@
         20,
         32
       ]
+    },
+    {
+      "name": "break",
+      "rect": [
+        347,
+        0,
+        20,
+        32
+      ]
+    },
+    {
+      "name": "jump",
+      "rect": [
+        366,
+        0,
+        20,
+        32
+      ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "run",
+      "frameLength": 6,
+      "frames": [
+        "run-1",
+        "run-2",
+        "run-3"
+      ]
     }
   ]
 }
