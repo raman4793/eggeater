@@ -7,5 +7,5 @@ To run
 1. Make sure you have node installed ```node -v```
 2. Make sure you have npm installed ```npm -v```
 3. Now run ```npm install```
-4. Now run the code with ```npm start run```
-5. Visit [localhost:3000](http://localhost:3000) to see everything in action
+4. Now run the code with ```npm run start ```
+5. Visit [localhost:5000](http://localhost:5000) to see everything in action
